@@ -1,0 +1,62 @@
+Metadata-Version: 2.4
+Name: futures-ai-market-analyst
+Version: 0.1.0
+Summary: AI market analyst for NQ, ES, and BTC futures-style monitoring.
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: apscheduler>=3.10.4
+Requires-Dist: openai>=1.82.0
+Requires-Dist: pydantic>=2.7.0
+Requires-Dist: pydantic-settings>=2.2.1
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: requests>=2.32.0
+Requires-Dist: tenacity>=8.3.0
+Requires-Dist: yfinance>=0.2.40
+Provides-Extra: dev
+Requires-Dist: pytest>=8.2.0; extra == "dev"
+Requires-Dist: ruff>=0.4.0; extra == "dev"
+
+# Futures AI Market Analyst
+
+Production-oriented Python service that monitors:
+
+- NASDAQ futures (`NQ=F`)
+- S&P 500 futures (`ES=F`)
+- Bitcoin (`BTC-USD`)
+
+Every 15 minutes it collects current prices, latest financial news, and macro calendar events, detects CPI/NFP/FOMC/Fed-speaker risk, and asks the OpenAI API for a structured market bias report.
+
+## Setup
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env
+```
+
+Edit `.env` and set `OPENAI_API_KEY`. Add optional provider keys for better coverage:
+
+- `NEWSAPI_KEY`: broad latest-market headlines
+- `FINNHUB_API_KEY`: market news and economic calendar fallback
+- `FMP_API_KEY`: economic calendar
+
+## Run Once
+
+```bash
+market-analyst run-once
+```
+
+## Run Every 15 Minutes
+
+```bash
+market-analyst serve
+```
+
+Reports are written to `OUTPUT_DIR` as Markdown and JSON.
+
+## Notes
+
+- Price data comes from Yahoo Finance via `yfinance`; futures symbols are delayed unless your data source/account provides real-time access.
+- This is decision support, not financial advice. Always validate against your broker/data terminal before trading.
+- The OpenAI call uses structured JSON output through the Responses API so downstream automation gets predictable fields.

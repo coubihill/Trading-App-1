@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Intelligence</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-label="Market Intelligence logo"><span></span></div>
+          <div>
+            <p class="eyebrow">AI Market</p>
+            <h1>Intelligence</h1>
+          </div>
+        </div>
+        <button class="icon-button" id="refreshButton" aria-label="Refresh data" title="Refresh">
+          <span class="refresh-icon"></span>
+        </button>
+      </header>
+
+      <nav class="tabs" aria-label="Primary navigation">
+        <button class="tab active" data-page="home">HOME</button>
+        <button class="tab" data-page="setups">SETUPS</button>
+        <button class="tab" data-page="levels">LEVELS</button>
+        <button class="tab" data-page="calendar">CALENDAR</button>
+        <button class="tab" data-page="news">NEWS</button>
+        <button class="tab" data-page="backtest">BACKTEST</button>
+        <button class="tab" data-page="favorites">FAVORITES</button>
+        <button class="tab" data-page="profile">PROFILE</button>
+      </nav>
+
+      <section class="page active" id="homePage">
+        <div class="market-hero">
+          <canvas id="pulseCanvas" width="720" height="260" aria-label="Market pulse visual"></canvas>
+          <div class="hero-content">
+            <p class="eyebrow">Session Control</p>
+            <h2 id="controlHeadline">Buyers control the cleanest USD setups</h2>
+            <p id="controlCopy">NVIDIA, BTC/USD, and NASDAQ 100 have the strongest trade quality.</p>
+          </div>
+        </div>
+
+        <div class="summary-strip" aria-label="Market summary">
+          <div><span>Active</span><strong id="activeCount">0</strong></div>
+          <div><span>Avg Confidence</span><strong id="avgConfidence">0%</strong></div>
+          <div><span>Next Risk</span><strong id="nextRisk">CPI</strong></div>
+        </div>
+
+        <div class="style-panel">
+          <p class="eyebrow">Trading Style</p>
+          <div class="style-buttons" id="styleButtons">
+            <button class="style-button" data-style="Scalping">Scalping</button>
+            <button class="style-button active" data-style="Intraday">Intraday</button>
+            <button class="style-button" data-style="Day Trading">Day Trading</button>
+            <button class="style-button" data-style="Swing">Swing</button>
+          </div>
+          <p id="styleDescription"></p>
+        </div>
+
+        <div class="section-head">
+          <h2>Best Opportunities</h2>
+          <select id="assetFilter" aria-label="Filter opportunities by asset">
+            <option value="all">All USD Markets</option>
+          </select>
+        </div>
+        <div class="category-tabs" id="categoryTabs" aria-label="Market categories"></div>
+        <input
+          class="market-search"
+          id="marketSearch"
+          type="search"
+          placeholder="Search selected category"
+          aria-label="Search markets"
+        />
+        <div class="market-list" id="marketList"></div>
+      </section>
+
+      <section class="page" id="setupsPage">
+        <div class="section-head">
+          <h2>Trade Setups</h2>
+          <select id="setupFilter" aria-label="Filter setups">
+            <option value="all">All</option>
+            <option value="Buy">Buy</option>
+            <option value="Sell">Sell</option>
+            <option value="No Trade">No Trade</option>
+          </select>
+        </div>
+        <div class="setup-list" id="setupList"></div>
+      </section>
+
+      <section class="page" id="levelsPage">
+        <div class="section-head">
+          <h2>Levels & Liquidity</h2>
+          <select id="levelsAssetFilter" aria-label="Filter levels by asset">
+            <option value="all">All USD Markets</option>
+          </select>
+        </div>
+        <div class="levels-list" id="levelsList"></div>
+      </section>
+
+      <section class="page" id="calendarPage">
+        <div class="section-head">
+          <h2>Calendar Risk</h2>
+          <span class="live-dot">Macro</span>
+        </div>
+        <div class="calendar-list" id="calendarList"></div>
+      </section>
+
+      <section class="page" id="newsPage">
+        <div class="section-head">
+          <h2>Intelligence Feed</h2>
+          <span class="live-dot">Filtered</span>
+        </div>
+        <div class="filter-grid">
+          <label>Asset<select id="newsAssetFilter"><option value="all">All</option></select></label>
+          <label>
+            Style
+            <select id="styleFilter">
+              <option value="Scalping">Scalping</option>
+              <option value="Intraday" selected>Intraday</option>
+              <option value="Day Trading">Day Trading</option>
+              <option value="Swing">Swing</option>
+            </select>
+          </label>
+          <label>
+            Importance
+            <select id="importanceFilter">
+              <option value="0">Any</option>
+              <option value="6">6+</option>
+              <option value="8" selected>8+</option>
+            </select>
+          </label>
+          <label>
+            Relevance
+            <select id="relevanceFilter">
+              <option value="0">Any</option>
+              <option value="70" selected>70+</option>
+              <option value="85">85+</option>
+            </select>
+          </label>
+        </div>
+        <div class="news-list" id="newsList"></div>
+      </section>
+
+      <section class="page" id="backtestPage">
+        <div class="section-head">
+          <h2>Setup Backtest</h2>
+          <select id="backtestAssetFilter" aria-label="Filter backtests by asset">
+            <option value="all">All Active Setups</option>
+          </select>
+        </div>
+        <div class="notice-card">
+          <strong>Demo model result</strong>
+          <p>
+            These are 100-trade model results from the current setup rules and selected style. They are not
+            historical broker-grade backtests until real candle/tick data is connected.
+          </p>
+        </div>
+        <div class="backtest-summary" id="backtestSummary"></div>
+        <div class="backtest-list" id="backtestList"></div>
+      </section>
+
+      <section class="page" id="favoritesPage">
+        <div class="section-head">
+          <h2>Favorites</h2>
+          <button class="text-button" id="enableNotificationsButton">Enable Alerts</button>
+        </div>
+        <div class="notice-card">
+          <strong>Entry alerts</strong>
+          <p>
+            Saved markets are watched every time live quotes update. The app alerts only when a favorite becomes
+            ENTER: YES with fresh price data.
+          </p>
+        </div>
+        <div class="favorites-list" id="favoritesList"></div>
+      </section>
+
+      <section class="page" id="profilePage">
+        <div class="profile-card">
+          <div class="avatar">MI</div>
+          <div>
+            <h2>Trader Profile</h2>
+            <p>Intraday, high-confidence USD setups, macro-aware alerts.</p>
+          </div>
+        </div>
+
+        <div class="settings-panel">
+          <div class="setting-row">
+            <div><strong>Notifications</strong><span>Entry zones, risk events, bias shifts</span></div>
+            <label class="switch"><input id="notificationsToggle" type="checkbox" checked /><span></span></label>
+          </div>
+          <div class="setting-row">
+            <div><strong>Confidence Threshold</strong><span id="confidenceLabel">70%</span></div>
+            <input id="confidenceSlider" type="range" min="40" max="95" value="70" />
+          </div>
+          <label class="select-row">Trading Style<select id="profileStyle"><option>Scalping</option><option selected>Intraday</option><option>Day Trading</option><option>Swing</option></select></label>
+          <label class="select-row">Alert Type<select><option selected>Entry Zone</option><option>Bias Shift</option><option>High Impact News</option><option>Reversal Risk</option></select></label>
+        </div>
+
+        <div class="section-head">
+          <h2>Alerts</h2>
+          <button class="text-button" id="addAlertButton">Add Alert</button>
+        </div>
+        <div class="alert-list" id="alertList"></div>
+
+        <div class="section-head">
+          <h2>Journal</h2>
+          <button class="text-button" id="addJournalButton">Log Trade</button>
+        </div>
+        <div class="journal-list" id="journalList"></div>
+
+        <div class="section-head">
+          <h2>Watchlist</h2>
+          <button class="text-button" id="selectAllButton">Select All</button>
+        </div>
+        <div class="watchlist" id="watchlist"></div>
+
+        <div class="account-actions">
+          <button>Email Sign Up</button>
+          <button>Google Sign In</button>
+          <button>Apple Sign In</button>
+          <button class="danger">Delete Request</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="onboarding" id="onboarding">
+      <div class="onboarding-panel">
+        <div class="brand-mark large"><span></span></div>
+        <h2>Set your trading lens</h2>
+        <div class="onboarding-step active" data-step="0">
+          <p>Which USD markets do you trade?</p>
+          <div class="pill-grid" id="onboardingMarkets"></div>
+        </div>
+        <div class="onboarding-step" data-step="1">
+          <p>What is your trading style?</p>
+          <div class="choice-row">
+            <button class="choice">Scalping</button>
+            <button class="choice selected">Intraday</button>
+            <button class="choice">Swing</button>
+          </div>
+        </div>
+        <div class="onboarding-step" data-step="2">
+          <p>Minimum setup confidence?</p>
+          <input id="onboardingConfidence" type="range" min="40" max="95" value="70" />
+          <strong id="onboardingConfidenceLabel">70%</strong>
+        </div>
+        <div class="onboarding-actions">
+          <button class="text-button" id="skipOnboarding">Skip</button>
+          <button class="primary-button" id="nextOnboarding">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-drawer" id="explainDrawer" aria-hidden="true">
+      <div class="drawer-panel">
+        <div class="drawer-head">
+          <div>
+            <p class="eyebrow" id="drawerEyebrow">Setup explanation</p>
+            <h2 id="drawerTitle">Market</h2>
+          </div>
+          <button class="icon-button" id="closeDrawer" aria-label="Close explanation">×</button>
+        </div>
+        <div class="drawer-body" id="drawerBody"></div>
+        <div class="drawer-ai">
+          <div class="ai-head compact">
+            <div>
+              <p class="eyebrow">Ask About This Setup</p>
+              <h3 id="drawerAiTitle">Context AI</h3>
+            </div>
+            <span>Focused</span>
+          </div>
+          <div class="quick-prompts compact">
+            <button data-drawer-prompt="Explain the entry">Entry</button>
+            <button data-drawer-prompt="Why could it fail?">Risk</button>
+            <button data-drawer-prompt="Where can it go first?">Targets</button>
+            <button data-drawer-prompt="Should I wait?">Wait?</button>
+          </div>
+          <div class="ai-messages drawer-messages" id="drawerAiMessages"></div>
+          <form class="ai-form" id="drawerAiForm">
+            <input id="drawerAiInput" type="text" autocomplete="off" placeholder="Ask about this setup..." />
+            <button type="submit">Ask</button>
+          </form>
+        </div>
+      </div>
+    </aside>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
